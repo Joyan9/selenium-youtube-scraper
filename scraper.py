@@ -1,7 +1,11 @@
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import pandas as pd
+import smtplib
+import os
+import json
 def get_driver():
   chrome_options = Options()
   chrome_options.add_argument('--no-sandbox')
@@ -38,6 +42,29 @@ def parse_video(video):
     'description':description,
     'views_and_date':views_date
   }
+
+def send_email(body="Hi"):
+  try:
+    sender_email = "seleniumprojectmail@gmail.com"
+    receiver_email = "seleniumprojectmail@gmail.com"
+    sender_password = os.environ['GMAIL_PASSWORD']
+    server_ssl = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    server_ssl.ehlo()
+    subject = 'YouTube Trending Gaming Videos'
+    email_text = f"""
+    From: {sender_email}
+    To: {receiver_email}
+    Subject: {subject}
+    {body}
+    """
+    server_ssl.login(sender_email, sender_password)
+    server_ssl.sendmail(sender_email, receiver_email, email_text)
+    server_ssl.close()
+    print('Email sent!')
+  
+  except:
+    print("Something went wrong")
+
 if __name__ == "__main__":
   print("Creating driver....")
   driver = get_driver()
@@ -58,4 +85,6 @@ if __name__ == "__main__":
   print("Saving to CSV.....")
   videos_df = pd.DataFrame(videos_data)
   videos_df.to_csv('trending.csv', index=None)
-  
+  print("Sending email")
+  body = json.dumps(videos_data, indent = 2)
+  send_email(body)

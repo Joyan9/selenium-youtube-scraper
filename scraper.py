@@ -2,7 +2,7 @@ import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-import pandas as pd
+# import pandas as pd
 import smtplib
 import os
 import json
@@ -82,9 +82,9 @@ if __name__ == "__main__":
 
   videos_data = [parse_video(video) for video in videos[:10]]
   # print(videos_data[1])
-  print("Saving to CSV.....")
-  videos_df = pd.DataFrame(videos_data)
-  videos_df.to_csv('trending.csv', index=None)
+  # print("Saving to CSV.....")
+  # videos_df = pd.DataFrame(videos_data)
+  # videos_df.to_csv('trending.csv', index=None)
   print("Sending email")
   body = json.dumps(videos_data, indent = 2)
   send_email(body)
